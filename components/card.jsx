@@ -1,32 +1,35 @@
-import React, { useEffect, useState } from "react";
-import { Modal, View, Text, Button } from "react-native";
-import { Picker, TouchableOpacity } from "react-native-web";
+import { useEffect, useState } from "react";
+import {
+	View,
+	Text,
+	TouchableOpacity,
+	Modal,
+	Picker,
+	TextInput,
+} from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
 import axios from "axios";
 import { styles } from "../style";
-import { MaterialIcons } from "@expo/vector-icons";
 
-export default function CardConsultas({ navigation, consulta }) {
-	const [modalVisible, setModalVisible] = useState(false);
+export default function Card({ consulta }) {
 	const [remedios, setRemedios] = useState([]);
-	const [paciente, setPaciente] = useState({});
 	const [remedio, setRemedio] = useState({});
-
-	const setCompleted = async () => {
-		consulta.completa = true;
-		await axios.delete(`http://localhost:3000/consultas/${consulta.id}`);
-		await axios.post("http://localhost:3000/consultas", consulta);
-
-		setModalVisible(false);
-		navigation.navigate("Home");
-	};
+	const [remedioQuantidade, setRemedioQuantidade] = useState("");
+	const [remedioHorarios, setRemedioHorarios] = useState("");
+	const [paciente, setPaciente] = useState({});
+	const [modalVisible, setModalVisible] = useState(false);
 
 	const getRemedios = async () => {
 		try {
-			const response = await axios.get("http://localhost:3000/remedios");
-			setRemedios(response.data);
+			const response = await axios.get("http://localhost:3000/remedios/");
+			const remedios = await response.data;
+			setRemedios(remedios);
+			setRemedio(remedios.find((remedio) => remedio.id == consulta.remedio));
+			setRemedioQuantidade(consulta.remedioQuantidade || "");
+			setRemedioHorarios(consulta.remedioHorarios || "");
 		} catch (error) {
 			console.error(error);
-			setRemedios([]);
+			return setRemedios([]);
 		}
 	};
 
@@ -43,9 +46,24 @@ export default function CardConsultas({ navigation, consulta }) {
 			return setPaciente({});
 		}
 	};
-	useEffect(async () => {
-		await getRemedios();
-		await getPaciente();
+
+	const setCompleted = async () => {
+		try {
+			await axios.put(`http://localhost:3000/consultas/${consulta.id}`, {
+				...consulta,
+				remedio: remedio.id,
+				remedioQuantidade,
+				remedioHorarios,
+			});
+			setModalVisible(false);
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
+	useEffect(() => {
+		getRemedios();
+		getPaciente();
 	}, []);
 
 	return (
@@ -70,6 +88,16 @@ export default function CardConsultas({ navigation, consulta }) {
 				</Text>
 				<Text style={styles.name}>{`Data: ${consulta.data}`} </Text>
 				<Text style={styles.name}>{`Hora: ${consulta.hora}`} </Text>
+
+				{remedio && (
+					<Text style={styles.name}>{`Remedio: ${remedio.nome}`}</Text>
+				)}
+				{remedioQuantidade && (
+					<Text style={styles.name}>{`Quantidade: ${remedioQuantidade}`}</Text>
+				)}
+				{remedioHorarios && (
+					<Text style={styles.name}>{`Horários: ${remedioHorarios}`}</Text>
+				)}
 			</TouchableOpacity>
 			<Modal
 				animationType="slide"
@@ -122,7 +150,18 @@ export default function CardConsultas({ navigation, consulta }) {
 							/>
 						))}
 					</Picker>
-
+					<TextInput
+						style={styles.inputForm}
+						placeholder="Quantidade"
+						value={remedioQuantidade}
+						onChangeText={(text) => setRemedioQuantidade(text)}
+					/>
+					<TextInput
+						style={styles.inputForm}
+						placeholder="Horários (separados por vírgula)"
+						value={remedioHorarios}
+						onChangeText={(text) => setRemedioHorarios(text)}
+					/>
 					<TouchableOpacity onPress={setCompleted}>
 						<Text style={styles.botao}>Finalizar Consulta</Text>
 					</TouchableOpacity>

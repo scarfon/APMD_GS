@@ -1,47 +1,49 @@
 {
-	"usuarios": [
-		{
-			"id": 1,
-			"nome": "Dr. João",
-			"email": "joao@hapvida.com.br",
-			"senha": "123456"
-		}
-	],
-	"pacientes": [
-		{
-			"nome": "",
-			"sobrenome": "",
-			"idade": "",
-			"remedio": "",
-			"consultas": [],
-			"id": 1
-		},
-		{
-			"nome": "Andres",
-			"sobrenome": "Arboleda",
-			"idade": "19",
-			"remedio": "Dipirona",
-			"consultas": [],
-			"consulta": "12Ñ20",
-			"id": 2
-		}
-	],
-	"consultas": [
-		{
-			"paciente": "2",
-			"data": "11/11",
-			"hora": "15",
-			"completa": false,
-			"medico": "Dr. João",
-			"notas": "Hola Hola hola",
-			"id": 1,
-			"remedio": "1"
-		}
-	],
-	"remedios": [
-		{
-			"id": 1,
-			"nome": "Dipirona"
-		}
-	]
+  "usuarios": [
+    {
+      "id": 1,
+      "nome": "Dr. João",
+      "email": "joao@hapvida.com.br",
+      "senha": "123456"
+    }
+  ],
+  "pacientes": [
+    {
+      "nome": "",
+      "sobrenome": "",
+      "idade": "",
+      "remedio": "",
+      "consultas": [],
+      "id": 1
+    },
+    {
+      "nome": "Andres",
+      "sobrenome": "Arboleda",
+      "idade": "19",
+      "remedio": "Dipirona",
+      "consultas": [],
+      "consulta": "12Ñ20",
+      "id": 2
+    }
+  ],
+  "consultas": [
+    {
+      "paciente": "2",
+      "data": "11/11",
+      "hora": "15",
+      "completa": false,
+      "medico": "Dr. João",
+      "notas": "Hola Hola hola",
+      "id": 1,
+      "remedio": 1,
+      "remedioQuantidade": "2",
+      "remedioHorarios": "8,18"
+    }
+  ],
+  "remedios": [
+    {
+      "id": 1,
+      "nome": "Dipirona"
+    }
+  ]
 }
